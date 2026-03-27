@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hukkeri Dhaba | Official</title>
+    <style>
+        :root {
+            --red: #ff7003;
+            --orange: #ff7003;
+            --white: #fefefe;
+            --dark: #1a1a1a;
+            --light-bg: #fdfdfd;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--white);
+            color: var(--dark);
+        }
+
+        /* --- HERO PAGE --- */
+        #hero-section {
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://tse3.mm.bing.net/th/id/OIP.ZqOM4pyTyudhToF13jO9QQHaE7?pid=Api&P=0&h=180p'); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: fixed;
+            top: 0; left: 0; z-index: 5000;
+            transition: transform 0.7s ease-in-out;
+        }
+
+        #hero-section.hide { transform: translateY(-100%); }
+
+        .hero-title { font-size: 3.5rem; margin: 0; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .hero-tag { font-size: 1.1rem; letter-spacing: 5px; margin-top: 10px; opacity: 0.9; }
+
+        .start-btn {
+            margin-top: 40px;
+            background: var(--orange);
+            color: white;
+            padding: 20px 60px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+        .start-btn:active { transform: scale(0.95); }
+
+        /* --- MENU PAGE --- */
+        #menu-wrapper {
+            display: none;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 320px; 
+        }
+
+        .tab-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            display: flex;
+            overflow-x: auto;
+            padding: 15px;
+            gap: 12px;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+            scrollbar-width: none;
+        }
+        .tab-bar::-webkit-scrollbar { display: none; }
+
+        .tab {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border-radius: 50px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border: none;
+        }
+        .tab.active { background: var(--red); color: white; }
+
+        .category-image-header {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 4px solid var(--red);
+        }
+
+        .cat-name {
+            padding: 20px 20px 5px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--red);
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .menu-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .item-text b { font-size: 1rem; display: block; margin-bottom: 4px; }
+        .item-text span { color: var(--red); font-weight: 800; font-size: 1rem; }
+
+        /* --- ROUNDED BUTTONS --- */
+        .qty-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fff5f5;
+            padding: 5px 10px;
+            border-radius: 50px; 
+            border: 1px solid #ffdada;
+        }
+
+        .qty-btn { 
+            width: 32px; 
+            height: 32px; 
+            border: none; 
+            background: var(--red); 
+            color: white; 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 50%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0;
+            transition: 0.2s;
+        }
+        .qty-btn:active { background: var(--dark); }
+
+        /* --- CART PANEL --- */
+        .cart-panel {
+            position: fixed;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            width: 100%; max-width: 600px;
+            background: white;
+            padding: 25px;
+            border-radius: 25px 25px 0 0;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+            transition: 0.4s ease;
+            z-index: 4000;
+            box-sizing: border-box;
+        }
+        .cart-panel.active { transform: translateX(-50%) translateY(0); }
+
+        .form-input {
+            width: 100%; padding: 12px; margin-bottom: 8px;
+            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;
+        }
+
+        .wp-btn {
+            background: var(--red);
+            color: white; width: 100%;
+            padding: 18px; border: none;
+            border-radius: 8px; font-weight: 800;
+            font-size: 1.1rem; cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    <section id="hero-section">
+        <h1 class="hero-title">Hukkeri Dhaba</h1>
+        <p class="hero-tag">ROYAL INDIAN DINING</p>
+        <button class="start-btn" onclick="openMenu()">Explore Menu</button>
+    </section>
+
+    <main id="menu-wrapper">
+        <div class="tab-bar" id="category-nav"></div>
+        
+        <img id="dynamic-cat-img" class="category-image-header" src="" alt="Section">
+        <h2 id="dynamic-title" class="cat-name"></h2>
+        
+        <div id="items-list"></div>
+
+        <div class="cart-panel" id="cart-footer">
+            <input type="text" id="c-name" class="form-input" placeholder="Your Full Name" 
+                   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
+            
+            <input type="tel" id="c-phone" class="form-input" placeholder="Mobile Number" maxlength="10" 
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            
+            <div style="display:flex; justify-content:space-between; font-weight:900; font-size:1.4rem; margin: 15px 0;">
+                <span>Total:</span>
+                <span style="color:var(--red);">₹<span id="final-total">0</span></span>
+            </div>
+            
+            <button id="loc-btn" class="wp-btn" style="background: var(--orange);" onclick="getLocation()">📍 Share Location to Order</button>
+            <button id="confirm-btn" class="wp-btn" onclick="sendToGoogleForm()" style="display: none;">Confirm Order</button>
+        </div>
+    </main>
+
+<script>
+    let cart = {};
+    let userLocationURL = ""; 
+    
+    const fullMenuData = {
+        "Chicken Starters": {
+            img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=800&q=80",
+            items: [
+                {n: "Chicken 65", p: 100}, {n: "Chicken Dry", p: 170}, 
+                {n: "Chicken Kabab", p: 170}, {n: "Chicken Sukka", p: 140},
+                {n: "Chicken Lollipop", p: 120}, {n: "Chicken Tangadi", p: 110}
+            ]
+        },
+        "Dum Biryani": {
+            img: "https://tse3.mm.bing.net/th/id/OIP.ZqOM4pyTyudhToF13jO9QQHaE7?pid=Api&P=0&h=180",
+            items: [
+                {n: "Chicken Biryani Half", p: 130}, {n: "Chicken Biryani Full", p: 180},
+                {n: "Egg Biryani Full", p: 160}, {n: "Veg Biryani Special", p: 170}
+            ]
+        },
+        "Non-Veg Handi": {
+            img: "https://img.freepik.com/premium-photo/dum-handi-chicken-biryani-is-prepared-earthen-clay-pot-called-haandi-popular-indian-non-vegetarian-food_466689-52225.jpg?w=1380",
+            items: [
+                {n: "Chicken Masala Full", p: 550}, {n: "Chicken Kolhapuri", p: 580},
+                {n: "Chicken Mughlai", p: 600}, {n: "Chicken Handi Half", p: 350}
+            ]
+        },
+        "Veg Starters": {
+            img: "https://images.unsplash.com/photo-1601050690597-df056fb1ce24?w=800&q=80",
+            items: [
+                {n: "Masala Senga", p: 10}, {n: "Maharaja Senga", p: 30}, 
+                {n: "Rosted Papad", p: 20}, {n: "Oil Papad", p: 25},
+                {n: "Masala Papad", p: 35}, {n: "Finger Chipes", p: 90},
+                {n: "Onion Pakada", p: 90}, {n: "Gobi Manchuri", p: 90},
+                {n: "Kaju Fry", p: 90}
+            ]
+        },
+        "Veg Dish": {
+            img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=80",
+            items: [
+                {n: "Dal Fry", p: 90}, {n: "Dal Kolhapuri", p: 110},
+                {n: "Dal Tabaka", p: 120}, {n: "Akka Masur", p: 90},
+                {n: "Akka Masur Kolhapuri", p: 100}, {n: "Mix Veg", p: 120},
+                {n: "Mix Veg Kolhapuri", p: 130}, {n: "Mix Veg Makhanwala", p: 130},
+                {n: "Mix Veg Hyderabadi", p: 130}, {n: "Kaju Curry", p: 160},
+                {n: "Kaju Kolhapuri", p: 170}, {n: "Kaju Makhanwala", p: 170},
+                {n: "Paneer Masala", p: 160}, {n: "Paneer Kolhapuri", p: 170},
+                {n: "Paneer Makhanwala", p: 170}, 
+                {n: "Paneer Tikka", p: 0},
+                {n: "Paneer Tikka Masala", p: 180},
+                {n: "Kaju Paneer Masala", p: 180}, {n: "Palak Paneer", p: 170},
+                {n: "Matter Paneer", p: 160}, {n: "Matter Masala", p: 110},
+                {n: "Green Pis Masala", p: 110}, {n: "Baigen Masala", p: 100},
+                {n: "Shimla Masala", p: 100}, {n: "Capsicum Masala", p: 100},
+                {n: "Channa Masala", p: 100}
+            ]
+        },
+        "Roti Items": {
+            img: "https://images.unsplash.com/photo-1593504049359-ef163f0356b8?w=800&q=80",
+            items: [
+                {n: "Tanduri Roti", p: 15}, {n: "Pepar Roti", p: 25},
+                {n: "Butter Roti", p: 25}, {n: "Butter Kulach", p: 35},
+                {n: "Butter Naan", p: 40}, {n: "Kerala Paroota (Ready)", p: 20},
+                {n: "Chapati", p: 15}, {n: "Sajji Rotti", p: 10},
+                {n: "Gonjal Rotti", p: 10}
+            ]
+        },
+        "Rice": {
+            img: "https://images.unsplash.com/photo-1512058560366-cd2427ff06b3?w=800&q=80",
+            items: [
+                {n: "Plane Rice-Half", p: 30}, {n: "Plane Rice-Full", p: 60},
+                {n: "Jeera Rice-Half", p: 50}, {n: "Jeera Rice-Full", p: 100},
+                {n: "Masala Rice-Half", p: 60}, {n: "Masala Rice-Full", p: 120},
+                {n: "Ghee Rice-Half", p: 60}, {n: "Ghee Rice-Full", p: 120},
+                {n: "Kushka Rice-Half", p: 60}, {n: "Kushka Rice-Full", p: 120},
+                {n: "Curd Rice Full Only", p: 120},
+                {n: "Veg Fried Rice", p: 0}
+            ]
+        }
+    };
+
+    function openMenu() {
+        document.getElementById('hero-section').classList.add('hide');
+        setTimeout(() => {
+            document.getElementById('hero-section').style.display = 'none';
+            document.getElementById('menu-wrapper').style.display = 'block';
+            renderTabs();
+            setCategory("Chicken Starters");
+        }, 700);
+    }
+
+    function renderTabs() {
+        const nav = document.getElementById('category-nav');
+        nav.innerHTML = '';
+        Object.keys(fullMenuData).forEach(cat => {
+            const t = document.createElement('button');
+            t.className = 'tab';
+            t.id = `tab-${cat.replace(/\s/g, '')}`;
+            t.innerText = cat;
+            t.onclick = () => setCategory(cat);
+            nav.appendChild(t);
+        });
+    }
+
+    function setCategory(cat) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        const tabElement = document.getElementById(`tab-${cat.replace(/\s/g, '')}`);
+        if(tabElement) tabElement.classList.add('active');
+        
+        document.getElementById('dynamic-title').innerText = cat;
+        document.getElementById('dynamic-cat-img').src = fullMenuData[cat].img;
+
+        const list = document.getElementById('items-list');
+        list.innerHTML = '';
+        
+        fullMenuData[cat].items.forEach(item => {
+            const qty = cart[item.n] ? cart[item.n].q : 0;
+            const row = document.createElement('div');
+            row.className = 'menu-row';
+            
+            row.innerHTML = `
+                <div class="item-text"><b>${item.n}</b><span>₹${item.p}</span></div>
+                <div class="qty-box">
+                    <button class="qty-btn" onclick="update(this, '${item.n}',${item.p},-1)">−</button>
+                    <span class="qty-count" style="font-weight:900;">${qty}</span>
+                    <button class="qty-btn" onclick="update(this, '${item.n}',${item.p},1)">+</button>
+                </div>`;
+            
+            list.appendChild(row);
+        });
+    }
+
+    function update(btnElement, name, price, delta) {
+        if(!cart[name]) cart[name] = {q: 0, p: price};
+        cart[name].q += delta;
+        if(cart[name].q <= 0) {
+            cart[name].q = 0;
+            delete cart[name];
+        }
+
+        // UPDATE NUMBER ON SCREEN INSTANTLY
+        const qtySpan = btnElement.parentElement.querySelector('.qty-count');
+        qtySpan.innerText = cart[name] ? cart[name].q : 0;
+
+        let total = 0; let active = 0;
+        for(let key in cart) { active++; total += (cart[key].q * cart[key].p); }
+        
+        document.getElementById('final-total').innerText = total;
+        document.getElementById('cart-footer').classList.toggle('active', active > 0);
+    }
+
+    function getLocation() {
+        const name = document.getElementById('c-name').value;
+        const phone = document.getElementById('c-phone').value;
+        
+        if(!name || phone.length < 10) {
+            return alert("Please enter your full name and a valid 10-digit mobile number first!");
+        }
+
+        const locBtn = document.getElementById('loc-btn');
+        locBtn.innerText = "Accessing GPS...";
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    userLocationURL = `https://www.google.com/maps?q=${lat},${lon}`;
+                    
+                    locBtn.style.display = "none";
+                    document.getElementById('confirm-btn').style.display = "block";
+                },
+                (error) => {
+                    alert("We need location access to deliver!");
+                    locBtn.innerText = "📍 Share Location to Order";
+                },
+                { enableHighAccuracy: true }
+            );
+        }
+    }
+
+    async function sendToGoogleForm() {
+        const name = document.getElementById('c-name').value;
+        const phone = document.getElementById('c-phone').value;
+        const total = document.getElementById('final-total').innerText;
+        
+        let orderDetails = `Name: ${name} | Phone: ${phone}\nLocation: ${userLocationURL}\n\nOrder:\n`;
+        for(let k in cart) { 
+            orderDetails += `- ${k} (x${cart[k].q})\n`; 
+        }
+
+        const formID = "1FAIpQLSfYGXB2Lim7wtiFCYy8U7MtV9DN9X2Tm7zSkx-qYxPLSLRcUg";
+        const baseURL = `https://docs.google.com/forms/d/e/${formID}/formResponse`;
+        
+        const formData = new URLSearchParams();
+        formData.append('entry.1304197339', orderDetails);   
+        formData.append('entry.248975380', total);          
+        formData.append('entry.164020655', "Hukkeri Dhaba"); 
+
+        const btn = document.getElementById('confirm-btn');
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        try {
+            await fetch(baseURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData
+            });
+
+            alert("Order Confirmed! Your order and location have been received.");
+            location.reload(); 
+
+        } catch (error) {
+            alert("Connection error. Please try again.");
+            btn.innerText = "Confirm Order";
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
